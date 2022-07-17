@@ -34,6 +34,14 @@ struct Title: ViewModifier {
     }
 }
 
+struct LargeTitle: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(.largeTitle)
+            .foregroundColor(.blue)
+    }
+}
+
 extension View {
     func titleStyle() -> some View {
         modifier(Title())
@@ -46,11 +54,21 @@ extension View {
     }
 }
 
+extension View {
+    func largeTitleStyle() -> some View {
+        modifier(LargeTitle())
+    }
+}
+
 struct ContentView: View {
     var body: some View {
-        Color.blue
-            .frame(width: 300, height: 200)
-            .watermarked(with: "Hacking with Swift")
+        VStack {
+            Text("This is a large blue title")
+                .largeTitleStyle()
+            Color.blue
+                .frame(width: 300, height: 200)
+                .watermarked(with: "Hacking with Swift")
+        }
     }
 }
 

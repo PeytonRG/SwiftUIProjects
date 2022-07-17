@@ -60,12 +60,14 @@ struct ContentView: View {
                 
                 Section {
                     Text(totalPerPerson, format: currencyFormatter)
+                        .foregroundColor(tipPercentage == 0 ? .red : .primary)
                 } header: {
                     Text("Amount per person")
                 }
                 
                 Section {
                     Text(totalCost, format: currencyFormatter)
+                        .foregroundColor(tipPercentage == 0 ? .red : .primary)
                 } header: {
                     Text("Grand Total")
                 }
