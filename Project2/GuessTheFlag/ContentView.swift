@@ -28,6 +28,11 @@ struct ContentView: View {
     @State private var questionNumber = 1
     @State private var continueButtonText = ""
     
+    @State private var animationAmount = 0.0
+    @State private var opacity = 1.0
+    @State private var scale = 1.0
+    @State private var tappedFlag = 0
+    
     var body: some View {
         ZStack {
             RadialGradient(stops: [
@@ -58,6 +63,13 @@ struct ContentView: View {
                         } label: {
                             FlagImage(country: countries[number])
                         }
+                        
+                        .rotationEffect(tappedFlag == number ? .degrees(animationAmount) : .degrees(0))
+                        .opacity(tappedFlag != number ? opacity : 1)
+                        .scaleEffect(tappedFlag != number ? scale : 1)
+//                        .onTapGesture {
+//                            print("tapped \(countries[number])")
+//                        }
                     }
                 }
                 .frame(maxWidth: .infinity)
@@ -105,6 +117,14 @@ struct ContentView: View {
             continueButtonText = "Continue"
         }
         showingScore = true
+        
+        tappedFlag = number
+        
+        withAnimation {
+            opacity = 0.25
+            scale = 0.5
+            animationAmount += 360
+        }
     }
     
     func askQuestion() {
@@ -117,6 +137,11 @@ struct ContentView: View {
         }
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
+        
+        withAnimation {
+            opacity = 1
+            scale = 1
+        }
     }
 }
 
