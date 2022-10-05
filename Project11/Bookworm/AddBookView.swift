@@ -11,6 +11,8 @@ struct AddBookView: View {
     @Environment(\.managedObjectContext) var moc
     @Environment(\.dismiss) var dismiss
     
+    @State private var showingValidationAlert = false
+    
     @State private var title = ""
     @State private var author = ""
     @State private var rating = 3
@@ -43,6 +45,11 @@ struct AddBookView: View {
                 
                 Section {
                     Button("Save") {
+                        if title == "" || author == "" {
+                            showingValidationAlert = true
+                            return
+                        }
+                        
                         let newBook = Book(context: moc)
                         newBook.id = UUID()
                         newBook.title = title
@@ -50,6 +57,7 @@ struct AddBookView: View {
                         newBook.rating = Int16(rating)
                         newBook.genre = genre
                         newBook.review = review
+                        newBook.date = Date.now
                         
                         try? moc.save()
                         dismiss()
@@ -57,6 +65,11 @@ struct AddBookView: View {
                 }
             }
             .navigationTitle("Add Book")
+            .alert("Form Incomplete", isPresented: $showingValidationAlert) {
+                Button("OK") { }
+            } message: {
+                Text("All fields are required")
+            }
         }
     }
 }

@@ -31,9 +31,22 @@ struct DetailView: View {
                     .offset(x: -5, y: -5)
             }
             
-            Text(book.author ?? "Unknown Author")
-                .font(.title)
-                .foregroundColor(.secondary)
+            VStack {
+                Text(book.author ?? "Unknown Author")
+                    .font(.title)
+                    .foregroundColor(.secondary)
+                
+                if book.date != nil {
+                    Text(book.date!, style: .date)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                else {
+                    Text("Publish Date Unknown")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+            }
             
             Text(book.review ?? "No review")
                 .padding()
