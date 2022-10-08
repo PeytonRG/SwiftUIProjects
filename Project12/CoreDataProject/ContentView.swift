@@ -5,30 +5,41 @@
 //  Created by Peyton Gasink on 10/6/22.
 //
 
+import CoreData
 import SwiftUI
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) var moc
-    
-    @FetchRequest(sortDescriptors: []) var wizards: FetchedResults<Wizard>
+    @State private var lastNameFilter = "A"
     
     var body: some View {
         VStack {
-            List(wizards, id: \.self) { wizard in
-                Text(wizard.name ?? "Unknown")
+            FilteredList(filterKey: "lastName", filterValue: lastNameFilter) { (singer: Singer) in
+                Text("\(singer.wrappedFirstName) \(singer.wrappedLastName)")
             }
             
-            Button("Add") {
-                let wizard = Wizard(context: moc)
-                wizard.name = "Harry Potter"
+            Button("Add Examples") {
+                let taylor = Singer(context: moc)
+                taylor.firstName = "Taylor"
+                taylor.lastName = "Swift"
+                
+                let ed = Singer(context: moc)
+                ed.firstName = "Ed"
+                ed.lastName = "Sheeran"
+                
+                let adele = Singer(context: moc)
+                adele.firstName = "Adele"
+                adele.lastName = "Adkins"
+                
+                try? moc.save()
             }
             
-            Button("Save") {
-                do {
-                    try moc.save()
-                } catch {
-                    print(error.localizedDescription)
-                }
+            Button("Show A") {
+                lastNameFilter = "A"
+            }
+            
+            Button("Show S") {
+                lastNameFilter = "S"
             }
         }
     }
