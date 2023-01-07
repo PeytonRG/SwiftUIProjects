@@ -18,6 +18,7 @@ struct ContentView: View {
                     let personalExpenses = expenses.items.filter { item in
                         return item.type == "Personal"
                     }
+                    
                     ForEach(personalExpenses) { item in
                         HStack {
                             VStack(alignment: .leading) {
@@ -31,6 +32,9 @@ struct ContentView: View {
                             Text(item.amount, format: .currency(code: Locale.current.currencyCode ?? "USD"))
                                 .foregroundColor(item.amount < 100 ? (item.amount < 10 ? .green : .blue) : .red)
                         }
+                        .accessibilityElement()
+                        .accessibilityLabel("\(item.name): \(getLocaleCurrency(item.amount))")
+                        .accessibilityHint("\(item.type)")
                     }
                     .onDelete(perform: removeItems)
                 } header: {
@@ -54,6 +58,9 @@ struct ContentView: View {
                             Text(item.amount, format: .currency(code: Locale.current.currencyCode ?? "USD"))
                                 .foregroundColor(item.amount < 100 ? (item.amount < 10 ? .green : .blue) : .red)
                         }
+                        .accessibilityElement()
+                        .accessibilityLabel("\(item.name): \(getLocaleCurrency(item.amount))")
+                        .accessibilityHint("\(item.type)")
                     }
                     .onDelete(perform: removeItems)
                 } header: {
@@ -72,6 +79,14 @@ struct ContentView: View {
                 AddView(expenses: expenses)
             }
         }
+    }
+    
+    func getLocaleCurrency(_ amount: Double) -> String {
+        let formatter = NumberFormatter()
+        formatter.locale = Locale.current
+        formatter.numberStyle = .currency
+
+        return formatter.string(from: amount as NSNumber) ?? "Unknown"
     }
     
     func removeItems(at offsets: IndexSet) {
